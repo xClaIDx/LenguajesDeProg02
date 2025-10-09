@@ -1,35 +1,39 @@
 class Estudiante:
-    def __init__(self, nombre,dni,codigo_est):
+    def __init__(self, nombre, dni, codigo_est):
         self.nombre = nombre
         self.dni = dni
         self.codigo_est = codigo_est
-        self.cursos = []
+        self.cursos = []  # lista de cursos inscritos
 
     def inscribirse(self, curso):
-        self.curso = curso
-        curso.agregar_estudiante(self)
+        if curso not in self.cursos:
+            self.cursos.append(curso)
+            curso.agregar_estudiante(self)  # relación bidireccional
 
     def mostrar_informacion(self):
-        print("Nombre:", self.nombre)
-        print("DNI:", self.dni)
-        print("Codigo Estudiante:", self.codigo_est)
-        print("Cursos Inscritos:")
-        for curso in self.cursos:
-            print("-", curso.nombre)
+        print(f"\n Estudiante: {self.nombre}")
+        print(f"   DNI: {self.dni}")
+        print(f"   Código: {self.codigo_est}")
+        print("   Cursos Inscritos:")
+        if self.cursos:
+            for curso in self.cursos:
+                print(f"    - {curso.nombre_curso} (Profesor: {curso.profesor.nombre})")
+        else:
+            print("    Ninguno")
+
 
 class Profesor:
-    def __init__(self,nombre,dni,especialidad):
+    def __init__(self, nombre, dni, especialidad):
         self.nombre = nombre
         self.dni = dni
         self.especialidad = especialidad
 
     def mostrar_informacion(self):
-        print("Nombre:", self.nombre)
-        print("DNI:", self.dni)
-        print("Especialidad:", self.especialidad)
+        print(f" {self.nombre} - {self.especialidad} (DNI: {self.dni})")
+
 
 class Curso:
-    def __init__(self,nombre_curso, profesor):
+    def __init__(self, nombre_curso, profesor):
         self.nombre_curso = nombre_curso
         self.profesor = profesor
         self.estudiantes = []
@@ -37,17 +41,21 @@ class Curso:
     def agregar_estudiante(self, estudiante):
         if estudiante not in self.estudiantes:
             self.estudiantes.append(estudiante)
-        
+
     def mostrar_detalles(self):
-        print("Nombre del Curso:", self.nombre_curso)
+        print(f"\n Curso: {self.nombre_curso}")
         print("Profesor:")
         self.profesor.mostrar_informacion()
         print("Estudiantes Inscritos:")
-        for estudiante in self.estudiantes:
-            print (f"{estudiante.nombre} {estudiante.codigo_est}")
+        if self.estudiantes:
+            for est in self.estudiantes:
+                print(f"   - {est.nombre} ({est.codigo_est})")
+        else:
+            print("   Ninguno")
+
 
 class Universidad:
-    def __init__(self,nombre):
+    def __init__(self, nombre):
         self.nombre = nombre
         self.cursos = []
 
@@ -55,9 +63,12 @@ class Universidad:
         self.cursos.append(curso)
 
     def mostrar_cursos(self):
+        print(f"\n Universidad: {self.nombre}")
+        print("=" * 60)
         for curso in self.cursos:
             curso.mostrar_detalles()
-            print()
+            print("-" * 60)
+
 
 prof1 = Profesor("Ing. Juan Carlos", "01323043", "Programación")
 prof2 = Profesor("Dr. Morillos", "9876543", "Estadística")
@@ -78,7 +89,9 @@ est3 = Estudiante("Clyde Paricahua", "74321598", "20251003")
 est4 = Estudiante("Valeria Mamani", "72345612", "20251004")
 est5 = Estudiante("José Apaza", "79865431", "20251005")
 
+
 univ = Universidad("Universidad Nacional del Altiplano")
+
 
 for curso in [curso1, curso2, curso3, curso4, curso5, curso6, curso7]:
     univ.agregar_curso(curso)
